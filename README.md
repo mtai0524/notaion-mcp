@@ -10,23 +10,23 @@ Exposes your Notaion **Daily Notes** to Claude as MCP tools:
 
 ## Install — Claude Code
 
-No clone needed. One command, user scope, available in every project:
+No clone needed. One command registers it at user scope, so it is available in
+every project. `add-json` is the form that works in every shell, PowerShell
+included:
+
+```bash
+claude mcp add-json notaion '{"command":"cmd","args":["/c","npx","-y","https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main"],"env":{"NOTAION_EMAIL":"you@example.com","NOTAION_PASSWORD":"yourpassword"}}' --scope user
+```
+
+On macOS and Linux drop the `cmd` wrapper — use `"command":"npx"` with
+`"args":["-y","<url>"]`. The wrapper is there because `npx` on Windows is a
+`.cmd` shim that a bare spawn may not resolve.
+
+There is also the flag form, but avoid it in PowerShell — the `--` can be
+swallowed before `claude` sees it, and you get `unknown option '-y'`:
 
 ```bash
 claude mcp add notaion --scope user -e NOTAION_EMAIL=you@example.com -e NOTAION_PASSWORD=yourpassword -- npx -y https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main
-```
-
-On Windows, wrap the command so npx resolves:
-
-```bash
-claude mcp add notaion --scope user -e NOTAION_EMAIL=you@example.com -e NOTAION_PASSWORD=yourpassword -- cmd /c npx -y https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main
-```
-
-In PowerShell, `--` can be swallowed before `claude` sees it, which fails with
-`unknown option '-y'`. Use `add-json` there instead — it needs no `--`:
-
-```powershell
-claude mcp add-json notaion '{"command":"cmd","args":["/c","npx","-y","https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main"],"env":{"NOTAION_EMAIL":"you@example.com","NOTAION_PASSWORD":"yourpassword"}}' --scope user
 ```
 
 Restart Claude Code, then try: "list my daily notes for today".
@@ -75,7 +75,7 @@ config as shown above.
 ```bash
 git clone https://github.com/mtai0524/notaion-mcp.git
 cd notaion-mcp && npm install && npm link
-claude mcp add notaion --scope user -- notaion-mcp
+claude mcp add notaion --scope user notaion-mcp
 ```
 
 To check the connection without Claude, print today's notes:
@@ -92,6 +92,8 @@ node smoke.js 2026-07-24 # a specific date
   running is normal — stop it with Ctrl+C.
 - Slow network on first download: raise the timeout before starting Claude Code
   with `MCP_TIMEOUT=120000` (PowerShell: `$env:MCP_TIMEOUT=120000`).
+- `unknown option '-y'` means your shell ate the `--`. Use the `add-json`
+  form above.
 - Check status with `claude mcp get notaion` or `/mcp`.
 
 ## Test
