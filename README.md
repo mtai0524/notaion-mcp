@@ -1,43 +1,42 @@
 # Notaion MCP Server
 
-Exposes your Notaion **Daily Notes** to Claude Code as MCP tools:
+Exposes your Notaion **Daily Notes** to Claude as MCP tools:
 `list_daily_notes`, `search_daily_notes`, `create_daily_note`,
 `append_to_daily_note`, `update_daily_note`, `delete_daily_note`.
 
 ## Requirements
-- Node 18+
+- Node 20+
 - A Notaion account (email + password)
 
-## Install
+## Install — Claude Code
+
+No clone needed. One command, user scope, available in every project:
+
 ```bash
-cd mcp-server
-npm install
+claude mcp add notaion --scope user -e NOTAION_EMAIL=you@example.com -e NOTAION_PASSWORD=yourpassword -- npx -y https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main
 ```
 
-## Configure
+On Windows, wrap the command so npx resolves:
 
-Environment variables:
-- `NOTAION_EMAIL` (required)
-- `NOTAION_PASSWORD` (required)
-- `NOTAION_API_URL` (optional, default `https://notaion.runasp.net`)
-
-## Register with Claude Code
-
-Option A — CLI:
 ```bash
-claude mcp add notaion \
-  --env NOTAION_EMAIL=you@example.com \
-  --env NOTAION_PASSWORD=yourpassword \
-  -- node /ABSOLUTE/PATH/notaion/mcp-server/src/index.js
+claude mcp add notaion --scope user -e NOTAION_EMAIL=you@example.com -e NOTAION_PASSWORD=yourpassword -- cmd /c npx -y https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main
 ```
 
-Option B — `.mcp.json` at the repo root:
+In PowerShell the `--` needs single quotes: `'--' cmd /c npx -y <url>`.
+
+Restart Claude Code, then try: "list my daily notes for today".
+
+## Install — Claude Desktop
+
+Add to `mcpServers` in `claude_desktop_config.json`
+(`%APPDATA%\Claude\` on Windows, `~/Library/Application Support/Claude/` on macOS):
+
 ```json
 {
   "mcpServers": {
     "notaion": {
-      "command": "node",
-      "args": ["/ABSOLUTE/PATH/notaion/mcp-server/src/index.js"],
+      "command": "npx",
+      "args": ["-y", "https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main"],
       "env": {
         "NOTAION_EMAIL": "you@example.com",
         "NOTAION_PASSWORD": "yourpassword"
@@ -47,9 +46,42 @@ Option B — `.mcp.json` at the repo root:
 }
 ```
 
-Restart Claude Code, then try: "list my daily notes for today".
+On Windows use `"command": "cmd"` with `"args": ["/c", "npx", "-y", "<url>"]`.
+Restart Claude Desktop after the change.
+
+## Configuration
+
+| Variable | Required | Default |
+|---|---|---|
+| `NOTAION_EMAIL` | yes | — |
+| `NOTAION_PASSWORD` | yes | — |
+| `NOTAION_API_URL` | no | `https://notaion.runasp.net` |
+
+Running from a clone, you can put these in `.env.local` next to `package.json`
+instead (see `.env.local.example`). That file is gitignored. When installed via
+npx the code lives in the npm cache, so pass the variables through the MCP
+config as shown above.
+
+## Install from source
+
+```bash
+git clone https://github.com/mtai0524/notaion-mcp.git
+cd notaion-mcp && npm install && npm link
+claude mcp add notaion --scope user -- notaion-mcp
+```
+
+## Troubleshooting
+
+- `node -v` must report 20 or newer.
+- Run the npx command by hand to check it starts. A silent process that keeps
+  running is normal — stop it with Ctrl+C.
+- Slow network on first download: raise the timeout before starting Claude Code
+  with `MCP_TIMEOUT=120000` (PowerShell: `$env:MCP_TIMEOUT=120000`).
+- Check status with `claude mcp get notaion` or `/mcp`.
 
 ## Test
+
 ```bash
+npm install
 npm test
 ```
