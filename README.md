@@ -22,7 +22,12 @@ On Windows, wrap the command so npx resolves:
 claude mcp add notaion --scope user -e NOTAION_EMAIL=you@example.com -e NOTAION_PASSWORD=yourpassword -- cmd /c npx -y https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main
 ```
 
-In PowerShell the `--` needs single quotes: `'--' cmd /c npx -y <url>`.
+In PowerShell, `--` can be swallowed before `claude` sees it, which fails with
+`unknown option '-y'`. Use `add-json` there instead — it needs no `--`:
+
+```powershell
+claude mcp add-json notaion '{"command":"cmd","args":["/c","npx","-y","https://codeload.github.com/mtai0524/notaion-mcp/tar.gz/refs/heads/main"],"env":{"NOTAION_EMAIL":"you@example.com","NOTAION_PASSWORD":"yourpassword"}}' --scope user
+```
 
 Restart Claude Code, then try: "list my daily notes for today".
 
