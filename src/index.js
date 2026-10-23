@@ -21,7 +21,7 @@ const config = loadConfig();
 const auth = createAuth(config);
 const api = createApi({ apiUrl: config.apiUrl, auth });
 
-const server = new McpServer({ name: "notaion", version: "0.1.0" });
+const server = new McpServer({ name: "notaion", version: "1.0.0" });
 
 function register(name, description, inputSchema, handler) {
   server.registerTool(name, { description, inputSchema }, async (args) => {
