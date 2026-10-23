@@ -57,6 +57,9 @@ Restart Claude Desktop after the change.
 | `NOTAION_PASSWORD` | yes | — |
 | `NOTAION_API_URL` | no | `https://notaion.runasp.net` |
 
+You can log in with either your email or your username — the same value goes
+in `NOTAION_EMAIL`.
+
 Running from a clone, you can put these in `.env.local` next to `package.json`
 instead (see `.env.local.example`). That file is gitignored. When installed via
 npx the code lives in the npm cache, so pass the variables through the MCP
@@ -68,6 +71,13 @@ config as shown above.
 git clone https://github.com/mtai0524/notaion-mcp.git
 cd notaion-mcp && npm install && npm link
 claude mcp add notaion --scope user -- notaion-mcp
+```
+
+To check the connection without Claude, print today's notes:
+
+```bash
+node smoke.js            # today
+node smoke.js 2026-07-24 # a specific date
 ```
 
 ## Troubleshooting
