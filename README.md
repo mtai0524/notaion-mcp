@@ -1,8 +1,12 @@
 # Notaion MCP Server
 
-Exposes your Notaion **Daily Notes** to Claude as MCP tools:
-`list_daily_notes`, `search_daily_notes`, `create_daily_note`,
-`append_to_daily_note`, `update_daily_note`, `delete_daily_note`.
+Exposes your Notaion **Daily Notes** and **English practice** data to Claude
+as MCP tools:
+
+- Daily Notes: `list_daily_notes`, `search_daily_notes`, `create_daily_note`,
+  `append_to_daily_note`, `update_daily_note`, `delete_daily_note`.
+- English (`/english` page): `list_english_items`, `add_english_cards`,
+  `add_english_sentences`, `add_english_text`, `delete_english_item`.
 
 ## Requirements
 - Node 20+

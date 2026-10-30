@@ -16,6 +16,14 @@ import {
   updateDailyNote,
   deleteDailyNote,
 } from "./tools/dailyNote.js";
+import {
+  schemas as englishSchemas,
+  listEnglishItems,
+  addEnglishCards,
+  addEnglishSentences,
+  addEnglishText,
+  deleteEnglishItem,
+} from "./tools/english.js";
 
 const config = loadConfig();
 const auth = createAuth(config);
@@ -43,6 +51,12 @@ register("create_daily_note", "Create a new Daily Note sticky card.", schemas.cr
 register("append_to_daily_note", "Append text to an existing Daily Note's content.", schemas.append_to_daily_note, appendToDailyNote);
 register("update_daily_note", "Update fields of an existing Daily Note.", schemas.update_daily_note, updateDailyNote);
 register("delete_daily_note", "Soft-delete a Daily Note (moves it to trash).", schemas.delete_daily_note, deleteDailyNote);
+
+register("list_english_items", "List English practice items (flashcards, sentences, reading texts, writings), optionally filtered by kind and keyword.", englishSchemas.list_english_items, listEnglishItems);
+register("add_english_cards", "Add English flashcards (word/phrase, meaning, example). New cards are due for review right away.", englishSchemas.add_english_cards, addEnglishCards);
+register("add_english_sentences", "Add English sentences with their meaning to the sentence book.", englishSchemas.add_english_sentences, addEnglishSentences);
+register("add_english_text", "Add a reading text to the English READING tab.", englishSchemas.add_english_text, addEnglishText);
+register("delete_english_item", "Delete one English practice item by kind and id.", englishSchemas.delete_english_item, deleteEnglishItem);
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
